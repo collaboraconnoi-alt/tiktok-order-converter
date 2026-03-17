@@ -1,0 +1,5 @@
+{
+  "name": "TikTok Shipping Data Converter",
+  "description": "Convert TikTok XLSX shipping exports into a format ready for Google Sheets with automatic field mapping and phone number cleaning.",
+  "requestFramePermissions": []
+}
