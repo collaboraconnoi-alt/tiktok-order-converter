@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { Upload, FileSpreadsheet, Copy, Check, Trash2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -182,13 +182,17 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-[#111827] font-sans p-4 md:p-8">
+    <div className="min-h-screen bg-blue-50 text-[#111827] font-sans p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#111827]">TikTok Shipping Converter</h1>
-            <p className="text-[#6B7280] mt-1">Transform your TikTok exports for Google Sheets instantly.</p>
+        <header className="flex flex-col items-center justify-center text-center gap-6">
+          <div className="w-full">
+            <h1 className="text-4xl md:text-5xl font-trirong font-bold tracking-tight text-[#111827] bg-gray-200 py-6 px-4 rounded-2xl shadow-sm inline-block w-full max-w-3xl">
+              Tiktok Shopping Converter
+            </h1>
+            <p className="text-[#6B7280] mt-4 text-lg max-w-2xl mx-auto">
+              Transform your TikTok exports for Google Sheets instantly.
+            </p>
           </div>
           {data.length > 0 && (
             <div className="flex items-center gap-3">

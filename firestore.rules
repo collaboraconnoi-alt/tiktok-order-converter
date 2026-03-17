@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: messages
+    // Document ID: auto-generated
+    // Fields:
+    //   - text: string (required, 1-1000 chars)
+    //   - userId: string (required, matches auth.uid)
+    //   - userName: string (required, 1-100 chars)
+    //   - userPhoto: string (optional, URL)
+    //   - timestamp: timestamp (required)
+    //   - channelId: string (required, 1-50 chars)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.email == "collaboraconnoi@wecanrace.it" && request.auth.token.email_verified == true);
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['text', 'userId', 'userName', 'timestamp', 'channelId']) &&
+             data.keys().hasOnly(['text', 'userId', 'userName', 'userPhoto', 'timestamp', 'channelId']) &&
+             data.text is string && data.text.size() > 0 && data.text.size() <= 1000 &&
+             data.userId == request.auth.uid &&
+             data.userName is string && data.userName.size() > 0 && data.userName.size() <= 100 &&
+             data.timestamp is timestamp &&
+             data.channelId is string && data.channelId.size() > 0 && data.channelId.size() <= 50;
+    }
+
+    function isValidChannel(data) {
+      return data.keys().hasAll(['name']) &&
+             data.keys().hasOnly(['name', 'description', 'icon']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 50;
+    }
+
+    match /messages/{messageId} {
+      // Anyone authenticated can read messages
+      allow read: if isAuthenticated();
+      
+      // Users can only create messages as themselves
+      allow create: if isAuthenticated() && isValidMessage(request.resource.data);
+      
+      // Messages are immutable for now
+      allow update, delete: if false;
+    }
+
+    match /channels/{channelId} {
+      // Anyone authenticated can read channels
+      allow read: if isAuthenticated();
+      
+      // Only admins can create/update/delete channels
+      allow create, update, delete: if isAdmin() && isValidChannel(request.resource.data);
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

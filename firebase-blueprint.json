@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "Message": {
+      "title": "Message",
+      "description": "A chat message",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The content of the message"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who sent the message"
+        },
+        "userName": {
+          "type": "string",
+          "description": "The display name of the user"
+        },
+        "userPhoto": {
+          "type": "string",
+          "description": "The photo URL of the user"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the message was sent"
+        },
+        "channelId": {
+          "type": "string",
+          "description": "The ID of the channel this message belongs to"
+        }
+      },
+      "required": ["text", "userId", "userName", "timestamp", "channelId"]
+    },
+    "Channel": {
+      "title": "Channel",
+      "description": "A chat channel",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the channel"
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the channel"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon name from lucide-react"
+        }
+      },
+      "required": ["name"]
+    }
+  },
+  "firestore": {
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Collection of chat messages"
+    },
+    "/channels/{channelId}": {
+      "schema": "Channel",
+      "description": "Collection of chat channels"
+    }
+  }
+}
